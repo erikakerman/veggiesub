@@ -7,6 +7,9 @@ import {
 } from "react-router-dom";
 import { auth } from "./lib/config";
 
+// Context
+import { ProductProvider } from "./context/ProductContext";
+
 // Pages
 import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
@@ -34,31 +37,33 @@ function App() {
   }
 
   return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        <Route
-          path="/signin"
-          element={user ? <Navigate to="/home" replace /> : <SignIn />}
-        />
-        <Route
-          path="/signup"
-          element={user ? <Navigate to="/home" replace /> : <SignUp />}
-        />
+    <ProductProvider>
+      <Router>
+        <Routes>
+          {/* Public routes */}
+          <Route
+            path="/signin"
+            element={user ? <Navigate to="/home" replace /> : <SignIn />}
+          />
+          <Route
+            path="/signup"
+            element={user ? <Navigate to="/home" replace /> : <SignUp />}
+          />
 
-        {/* Protected home route */}
-        <Route
-          path="/home"
-          element={user ? <Home /> : <Navigate to="/signin" replace />}
-        />
+          {/* Protected home route */}
+          <Route
+            path="/home"
+            element={user ? <Home /> : <Navigate to="/signin" replace />}
+          />
 
-        {/* Root redirect */}
-        <Route
-          path="/"
-          element={<Navigate to={user ? "/home" : "/signin"} replace />}
-        />
-      </Routes>
-    </Router>
+          {/* Root redirect */}
+          <Route
+            path="/"
+            element={<Navigate to={user ? "/home" : "/signin"} replace />}
+          />
+        </Routes>
+      </Router>
+    </ProductProvider>
   );
 }
 
