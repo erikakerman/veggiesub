@@ -1,3 +1,4 @@
+// App.jsx
 import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
@@ -11,9 +12,16 @@ import { auth } from "./lib/config";
 import { ProductProvider } from "./context/ProductContext";
 
 // Pages
-import SignIn from "./pages/Auth/SignIn.jsx";
-import SignUp from "./pages/Auth/SignUp.jsx";
-import Home from "./pages/Home/index.jsx";
+import SignIn from "./pages/Auth/SignIn";
+import SignUp from "./pages/Auth/SignUp";
+import Home from "./pages/Home";
+import Browse from "./pages/Browse";
+import About from "./pages/About";
+import FAQ from "./pages/FAQ";
+import Cart from "./pages/Cart";
+
+// Layout
+import Navbar from "./components/layout/Navbar";
 
 function App() {
   const [initializing, setInitializing] = useState(true);
@@ -39,29 +47,48 @@ function App() {
   return (
     <ProductProvider>
       <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route
-            path="/signin"
-            element={user ? <Navigate to="/home" replace /> : <SignIn />}
-          />
-          <Route
-            path="/signup"
-            element={user ? <Navigate to="/home" replace /> : <SignUp />}
-          />
+        {!initializing && <Navbar user={user} />}
+        <div>
+          <Routes>
+            {/* Public routes */}
+            <Route
+              path="/signin"
+              element={user ? <Navigate to="/home" replace /> : <SignIn />}
+            />
+            <Route
+              path="/signup"
+              element={user ? <Navigate to="/home" replace /> : <SignUp />}
+            />
 
-          {/* Protected home route */}
-          <Route
-            path="/home"
-            element={user ? <Home /> : <Navigate to="/signin" replace />}
-          />
+            {/* Protected routes */}
+            <Route
+              path="/home"
+              element={user ? <Home /> : <Navigate to="/signin" replace />}
+            />
+            <Route
+              path="/browse"
+              element={user ? <Browse /> : <Navigate to="/signin" replace />}
+            />
+            <Route
+              path="/about"
+              element={user ? <About /> : <Navigate to="/signin" replace />}
+            />
+            <Route
+              path="/faq"
+              element={user ? <FAQ /> : <Navigate to="/signin" replace />}
+            />
+            <Route
+              path="/cart"
+              element={user ? <Cart /> : <Navigate to="/signin" replace />}
+            />
 
-          {/* Root redirect */}
-          <Route
-            path="/"
-            element={<Navigate to={user ? "/home" : "/signin"} replace />}
-          />
-        </Routes>
+            {/* Root redirect */}
+            <Route
+              path="/"
+              element={<Navigate to={user ? "/home" : "/signin"} replace />}
+            />
+          </Routes>
+        </div>
       </Router>
     </ProductProvider>
   );

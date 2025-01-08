@@ -1,75 +1,121 @@
+// components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { ShoppingCart, Menu, X } from "lucide-react";
+import { auth } from "../../lib/config";
+import { useState } from "react";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <nav className="border-b">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo and Company Name */}
-          <Link to="/" className="flex items-center space-x-2">
-            <span className="text-emerald-600 font-bold text-xl">
-              HarvestDirect
-            </span>
+    <nav className="fixed top-0 left-0 right-0 bg-shadow text-white p-4 z-50">
+      <div className="max-w-6xl mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold hover:text-champagne">
+          VeggieSub
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center space-x-6">
+          <Link to="/browse" className="hover:text-champagne">
+            Browse Vegetables
+          </Link>
+          <Link to="/about" className="hover:text-champagne">
+            About VeggieSub
+          </Link>
+          <Link to="/faq" className="hover:text-champagne">
+            FAQ
           </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Auth & Cart */}
+          {user ? (
+            <>
+              <Link to="/cart" className="hover:text-champagne">
+                <ShoppingCart className="h-6 w-6" />
+              </Link>
+              <button
+                onClick={() => auth.signOut()}
+                className="hover:text-champagne"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link to="/signin" className="hover:text-champagne">
+              Sign In
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute left-0 right-0 bg-shadow mt-4 py-2">
+          <div className="flex flex-col space-y-2">
             <Link
-              to="/"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
+              to="/browse"
+              className="px-4 py-2 hover:bg-taupe"
+              onClick={() => setIsMenuOpen(false)}
             >
-              Home
+              Browse Vegetables
             </Link>
             <Link
               to="/about"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
+              className="px-4 py-2 hover:bg-taupe"
+              onClick={() => setIsMenuOpen(false)}
             >
-              About us
-            </Link>
-            <Link
-              to="/products"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              Our products
-            </Link>
-            <Link
-              to="/success-stories"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              Success stories
+              About VeggieSub
             </Link>
             <Link
               to="/faq"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
+              className="px-4 py-2 hover:bg-taupe"
+              onClick={() => setIsMenuOpen(false)}
             >
               FAQ
             </Link>
-            <Link
-              to="/blog"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              Blog
-            </Link>
-          </div>
-
-          {/* Auth/Action Buttons */}
-          <div className="flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              Login
-            </Link>
-            <Button
-              variant="default"
-              className="bg-emerald-600 hover:bg-emerald-700"
-            >
-              Get a demo
-            </Button>
+            {user ? (
+              <>
+                <Link
+                  to="/cart"
+                  className="px-4 py-2 hover:bg-taupe"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Cart
+                </Link>
+                <button
+                  onClick={() => {
+                    auth.signOut();
+                    setIsMenuOpen(false);
+                  }}
+                  className="px-4 py-2 text-left hover:bg-taupe"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/signin"
+                className="px-4 py-2 hover:bg-taupe"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
