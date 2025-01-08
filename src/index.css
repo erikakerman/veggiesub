@@ -4,13 +4,13 @@
  
 @layer base {
   :root {
-    --background: 34 44% 97%;           /* Light tan background */
-    --foreground: 25 14% 46%;           /* Shadow color for text */
-    --primary: 148 24% 59%;             /* Green Sheen */
-    --primary-foreground: 0 0% 100%;    /* White text on primary */
-    --destructive: 0 84.2% 60.2%;       /* Keep original destructive */
-    --destructive-foreground: 0 0% 98%; /* Keep original destructive foreground */
-    --border: 28 25% 55%;               /* Light Taupe for borders */
+    --background: 52 94% 94%;    /* cornsilk */
+    --foreground: 88 38% 15%;    /* pakistan-green */
+    --primary: 74 32% 32%;       /* dark-moss-green */
+    --primary-foreground: 52 94% 94%; /* cornsilk */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 32 65% 62%;        /* earth-yellow */
   }
 
   /* Reset margins and padding */
@@ -26,6 +26,6 @@
 /* Optional: Add any custom base styles */
 @layer base {
   body {
-    @apply text-shadow;
+    @apply text-forest bg-cream;
   }
 }
