@@ -1,3 +1,4 @@
+// pages/Auth/SignIn.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,7 +15,7 @@ import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Label } from "../../components/ui/label";
 import { signInUser } from "../../lib/auth";
 
-const SignIn = () => {
+const SignIn = ({ isModal = false, onClose }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,11 @@ const SignIn = () => {
 
     try {
       await signInUser(email, password);
-      navigate("/dashboard");
+      if (isModal && onClose) {
+        onClose();
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -36,63 +41,74 @@ const SignIn = () => {
     }
   };
 
+  const handleSignUp = () => {
+    if (isModal && onClose) {
+      onClose();
+    }
+    navigate("/signup");
+  };
+
+  const cardContent = (
+    <>
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">
+          Sign In
+        </CardTitle>
+        <CardDescription className="text-center">
+          Sign in to your VeggieSub account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign In"}
+          </Button>
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-center space-x-1">
+        <span className="text-sm text-gray-600">
+          Don&apos;t have an account?
+        </span>
+        <Button variant="link" className="text-sm p-0" onClick={handleSignUp}>
+          Sign up
+        </Button>
+      </CardFooter>
+    </>
+  );
+
+  if (isModal) {
+    return cardContent;
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Sign In
-          </CardTitle>
-          <CardDescription className="text-center">
-            Sign in to your Harvest Direct account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center space-x-1">
-          <span className="text-sm text-gray-600">
-            Don&apos;t have an account?
-          </span>
-          <Button
-            variant="link"
-            className="text-sm p-0"
-            onClick={() => navigate("/signup")}
-          >
-            Sign up
-          </Button>
-        </CardFooter>
-      </Card>
+      <Card className="w-full max-w-md">{cardContent}</Card>
     </div>
   );
 };
