@@ -1,4 +1,3 @@
-// pages/Auth/SignIn.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,10 +12,11 @@ import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Label } from "../../components/ui/label";
-import { signInUser } from "../../lib/auth";
+import { useAuth } from "../../context/AuthContext";
 
 const SignIn = ({ isModal = false, onClose }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +28,7 @@ const SignIn = ({ isModal = false, onClose }) => {
     setIsLoading(true);
 
     try {
-      await signInUser(email, password);
+      await login(email, password);
       if (isModal && onClose) {
         onClose();
       } else {

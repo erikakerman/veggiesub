@@ -1,13 +1,21 @@
-// components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
-import { auth } from "../../lib/config";
 import { useState } from "react";
 import SignIn from "../../pages/Auth/SignIn";
+import { useAuth } from "../../context/AuthContext";
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <>
@@ -35,22 +43,24 @@ const Navbar = ({ user }) => {
               <ShoppingCart className="h-6 w-6" />
             </Link>
 
-            {/* User Icon */}
-            {user ? (
-              <button
-                onClick={() => auth.signOut()}
-                className="hover:text-earth"
-              >
-                <User className="h-6 w-6" />
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="hover:text-earth"
-              >
-                <User className="h-6 w-6" />
-              </button>
-            )}
+            {/* User Section */}
+            <div className="flex items-center space-x-2">
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm">{user.email}</span>
+                  <button onClick={handleLogout} className="hover:text-earth">
+                    <User className="h-6 w-6" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="hover:text-earth"
+                >
+                  <User className="h-6 w-6" />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,15 +109,18 @@ const Navbar = ({ user }) => {
                 Cart
               </Link>
               {user ? (
-                <button
-                  onClick={() => {
-                    auth.signOut();
-                    setIsMenuOpen(false);
-                  }}
-                  className="px-4 py-2 text-left hover:bg-moss"
-                >
-                  Sign Out
-                </button>
+                <div className="px-4 py-2 flex justify-between items-center">
+                  <span className="text-sm">{user.email}</span>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="hover:text-earth"
+                  >
+                    Sign Out
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={() => {

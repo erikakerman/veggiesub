@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,12 +11,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function ProductCard({ product }) {
+function ProductCard({ product, setShowLoginModal }) {
   const [selectedSize, setSelectedSize] = useState("single");
+  const [isLoading, setIsLoading] = useState(false);
   const { addToCart, PRICING_TIERS } = useCart();
+  const { user } = useAuth();
 
-  const handleAddToCart = () => {
-    addToCart(product, selectedSize);
+  const handleAddToCart = async () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await addToCart(product, selectedSize);
+      // Success! The cart is updated
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -57,8 +73,9 @@ function ProductCard({ product }) {
         <Button
           onClick={handleAddToCart}
           className="w-full bg-sheen hover:bg-sheen/90"
+          disabled={isLoading}
         >
-          Add Subscription
+          {isLoading ? "Adding..." : "Add Subscription"}
         </Button>
       </CardFooter>
     </Card>
