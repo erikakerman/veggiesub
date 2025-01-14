@@ -11,6 +11,7 @@ import Browse from "./pages/Browse";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 
 // Layout
 import Navbar from "./components/layout/Navbar";
@@ -31,6 +32,8 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
               </Routes>
             </div>
           </Router>

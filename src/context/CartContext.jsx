@@ -71,6 +71,17 @@ export function CartProvider({ children }) {
     await updateFirebase(newItems);
   };
 
+  const updateCartItem = async (productId, size) => {
+    if (!user) return;
+
+    const newItems = cart.items.map((item) =>
+      item.productId === productId ? { ...item, size } : item
+    );
+
+    setCart({ items: newItems });
+    await updateFirebase(newItems);
+  };
+
   const calculateTotal = () =>
     cart.items.reduce(
       (total, item) => total + item.price * PRICING_TIERS[item.size],
@@ -83,6 +94,7 @@ export function CartProvider({ children }) {
         cart,
         addToCart,
         removeFromCart,
+        updateCartItem,
         calculateTotal,
         PRICING_TIERS,
       }}
