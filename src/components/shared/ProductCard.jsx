@@ -11,11 +11,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Filename mapping for special cases
+const IMAGE_MAPPING = {
+  "Brussels Sprouts": "brussel-sprouts",
+  "Organic Carrots": "carrot",
+  "Regular Potatoes": "potatoes",
+};
+
 function ProductCard({ product, setShowLoginModal }) {
   const [selectedSize, setSelectedSize] = useState("single");
   const [isLoading, setIsLoading] = useState(false);
   const { addToCart, PRICING_TIERS } = useCart();
   const { user } = useAuth();
+
+  // Use mapping for special cases, otherwise convert name to filename
+  const imageBase =
+    IMAGE_MAPPING[product.name] ||
+    product.name.toLowerCase().replace(/\s+/g, "-");
+  const imagePath = new URL(`../../assets/${imageBase}.jpg`, import.meta.url)
+    .href;
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -26,7 +40,6 @@ function ProductCard({ product, setShowLoginModal }) {
     setIsLoading(true);
     try {
       await addToCart(product, selectedSize);
-      // Success! The cart is updated
     } catch (error) {
       console.error("Error adding to cart:", error);
     } finally {
@@ -38,9 +51,17 @@ function ProductCard({ product, setShowLoginModal }) {
     <Card className="flex flex-col">
       <CardContent className="flex-grow p-4">
         <img
-          src={product.imageUrl || "/api/placeholder/400/300"}
+          src={imagePath}
           alt={product.name}
           className="mb-4 h-48 w-full rounded-lg object-cover"
+          onError={(e) => {
+            console.error("Image load error:", {
+              name: product.name,
+              path: imagePath,
+              mappedName: imageBase,
+            });
+            e.target.src = "/api/placeholder/400/300";
+          }}
         />
 
         <h2 className="mb-2 text-xl font-semibold text-shadow">
