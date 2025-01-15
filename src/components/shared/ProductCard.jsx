@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Filename mapping for special cases
 const IMAGE_MAPPING = {
   "Brussels Sprouts": "brussel-sprouts",
   "Organic Carrots": "carrot",
@@ -24,7 +23,6 @@ function ProductCard({ product, setShowLoginModal }) {
   const { addToCart, PRICING_TIERS } = useCart();
   const { user } = useAuth();
 
-  // Use mapping for special cases, otherwise convert name to filename
   const imageBase =
     IMAGE_MAPPING[product.name] ||
     product.name.toLowerCase().replace(/\s+/g, "-");
@@ -48,7 +46,7 @@ function ProductCard({ product, setShowLoginModal }) {
   };
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col bg-white">
       <CardContent className="flex-grow p-4">
         <img
           src={imagePath}

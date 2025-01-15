@@ -10,36 +10,51 @@ function Browse() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p>Loading products...</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="animate-pulse text-lg text-gray-600">
+          Loading products...
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold text-shadow">Our Products</h1>
+      <div className="min-h-screen">
+        <header className="mt-8 mb-8 text-center">
+          <h1 className="mb-2 text-3xl font-bold text-gray-900">
+            Our Products
+          </h1>
+          <p className="text-base text-gray-600">
+            Discover our carefully curated collection
+          </p>
+        </header>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              setShowLoginModal={setShowLoginModal}
-            />
-          ))}
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="transform transition duration-200 hover:scale-102"
+              >
+                <ProductCard
+                  product={product}
+                  setShowLoginModal={setShowLoginModal}
+                  className="h-full rounded-lg bg-white shadow-md"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Login Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-cream rounded-lg p-4 max-w-md w-full mx-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
             <div className="flex justify-end">
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="text-forest hover:text-moss"
+                className="rounded-full p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
               >
                 <X className="h-6 w-6" />
               </button>
