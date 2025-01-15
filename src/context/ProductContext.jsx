@@ -1,6 +1,5 @@
-// src/context/ProductContext.jsx
-import { createContext, useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore"; // Change this import
+import { createContext, useState, useEffect, useContext } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/config";
 
 const ProductContext = createContext();
@@ -11,46 +10,41 @@ export function ProductProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Set up real-time listener
-    const productsCollection = collection(db, "products");
-
+    // Set up real-time listener for products
     const unsubscribe = onSnapshot(
-      productsCollection,
+      collection(db, "products"),
       (snapshot) => {
-        // Success handler
         const productsList = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-          // Convert Firestore Timestamps to JavaScript Dates
-          seasonStart: doc.data().seasonStart?.toDate(),
-          seasonEnd: doc.data().seasonEnd?.toDate(),
         }));
-
         setProducts(productsList);
         setLoading(false);
-        setError(null);
       },
-      (err) => {
-        // Error handler
-        console.error("Error fetching products:", err);
+      (error) => {
+        console.error("Error fetching products:", error);
         setError("Failed to fetch products");
         setLoading(false);
       }
     );
 
-    // Cleanup subscription on unmount
+    // Cleanup subscription
     return () => unsubscribe();
-  }, []); // Empty dependency array is fine here as we want to set up the listener once
-
-  const value = {
-    products,
-    loading,
-    error,
-  };
+  }, []);
 
   return (
-    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
+    <ProductContext.Provider value={{ products, loading, error }}>
+      {children}
+    </ProductContext.Provider>
   );
 }
+
+export const useProducts = () => {
+  const context = useContext(ProductContext);
+  if (!context) {
+    throw new Error("useProducts must be used within ProductProvider");
+  }
+  return context;
+};
 
 export { ProductContext };
