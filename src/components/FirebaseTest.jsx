@@ -1,41 +1,82 @@
-// src/components/FirebaseTest.jsx
-import { useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../lib/config";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const FirebaseTest = () => {
-  const [testResult, setTestResult] = useState("");
+  const [status, setStatus] = useState({
+    auth: "Testing...",
+    firestore: "Testing...",
+    products: [],
+  });
 
-  const testFirestore = async () => {
-    try {
-      setTestResult("Testing connection...");
+  useEffect(() => {
+    // Test Auth
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setStatus((prev) => ({
+        ...prev,
+        auth: user ? "Connected (User authenticated)" : "Connected (No user)",
+      }));
+    });
 
-      // Try to get the products collection
-      const querySnapshot = await getDocs(collection(db, "products"));
+    // Test Firestore
+    const testFirestore = async () => {
+      try {
+        const db = getFirestore();
+        const productsSnapshot = await getDocs(collection(db, "products"));
+        const products = [];
+        productsSnapshot.forEach((doc) => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        setStatus((prev) => ({
+          ...prev,
+          firestore: "Connected",
+          products,
+        }));
+      } catch (error) {
+        setStatus((prev) => ({
+          ...prev,
+          firestore: `Error: ${error.message}`,
+          products: [],
+        }));
+      }
+    };
 
-      // Log the number of documents found
-      const count = querySnapshot.size;
-      setTestResult(
-        `Connection successful! Found ${count} documents in products collection.`
-      );
-
-      // Log each document for debugging
-      querySnapshot.forEach((doc) => {
-        console.log("Document found:", doc.id, doc.data());
-      });
-    } catch (error) {
-      console.error("Firestore test error:", error);
-      setTestResult("Error: " + error.message);
-    }
-  };
+    testFirestore();
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="p-4">
-      <Button onClick={testFirestore} className="mb-2">
-        Test Firestore Connection
-      </Button>
-      <p className="mt-2">{testResult}</p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Firebase Connection Test</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertDescription>
+              <div className="space-y-2">
+                <div>Authentication Status: {status.auth}</div>
+                <div>Firestore Status: {status.firestore}</div>
+                <div>Products Found: {status.products.length}</div>
+              </div>
+            </AlertDescription>
+          </Alert>
+
+          {status.products.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">
+                Sample Product Data:
+              </h3>
+              <pre className="bg-gray-100 p-2 rounded">
+                {JSON.stringify(status.products[0], null, 2)}
+              </pre>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

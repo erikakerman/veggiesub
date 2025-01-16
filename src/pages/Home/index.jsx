@@ -1,22 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Leaf, Clock, Users, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import background from "@/assets/background.webp"; // Adjust path as needed
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleSubscribeClick = () => {
+    navigate("/browse");
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[50vh] flex items-center bg-cream border-b-2 border-shadow/10">
-        <div className="container mx-auto px-4">
+      <section className="relative h-[50vh] flex items-center border-b-2 border-shadow/10">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {/* Dark Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/30 z-10" />
+
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-xl">
-            <h1 className="text-4xl font-bold text-shadow mb-4">
-              Subscribe to you locally grown Vegetables
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Subscribe to your locally grown Vegetables
             </h1>
-            <p className="text-lg mb-6">
+            <p className="text-lg mb-6 text-white">
               Get fresh vegetables delivered weekly. Choose your portion size
               and support your local grower.
             </p>
-            <Button className="bg-shadow hover:bg-shadow/90 text-white px-4 py-2 rounded-lg shadow-md">
+            <Button
+              onClick={handleSubscribeClick}
+              className="bg-shadow hover:bg-shadow/90 text-white px-4 py-2 rounded-lg shadow-md"
+            >
               Start Your Subscription <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -65,7 +89,10 @@ const Home = () => {
             Join our community of conscious consumers supporting sustainable
             agriculture.
           </p>
-          <Button className="bg-champagne hover:bg-champagne/90 text-shadow text-sm">
+          <Button
+            onClick={handleSubscribeClick}
+            className="bg-champagne hover:bg-champagne/90 text-shadow text-sm"
+          >
             Start Your Subscription
           </Button>
         </div>

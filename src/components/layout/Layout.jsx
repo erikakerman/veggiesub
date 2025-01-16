@@ -1,7 +1,11 @@
+// src/components/layout/Layout.jsx
+import Navbar from "./Navbar";
+
 const Layout = ({ children }) => {
   return (
-    <div className="flex flex-col">
-      {children}
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">{children}</main>
       <footer className="bg-shadow text-white">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
