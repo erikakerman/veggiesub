@@ -10,12 +10,11 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				// New color scheme
-				'moss': '#606C38',
-				'forest': '#283618',
-				'cream': '#FEFAE0',
-				'earth': '#DDA15E',
-				'rust': '#BC6C25',
+				forest: '#2D3A3A',
+				moss: '#4A6670',
+				sage: '#94A193',
+				cream: '#F4F1EA',
+				accent: '#D96666',
 			},
 		},
 	},

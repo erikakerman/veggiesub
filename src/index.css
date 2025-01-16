@@ -1,31 +1,10 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
-@layer base {
-  :root {
-    --background: 52 94% 94%;    /* cornsilk */
-    --foreground: 88 38% 15%;    /* pakistan-green */
-    --primary: 74 32% 32%;       /* dark-moss-green */
-    --primary-foreground: 52 94% 94%; /* cornsilk */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 32 65% 62%;        /* earth-yellow */
-  }
 
-  /* Reset margins and padding */
-  html, body {
-    @apply m-0 p-0 overflow-x-hidden;
-  }
-
-  #root {
-    @apply w-full m-0 p-0;
-  }
-}
-
-/* Optional: Add any custom base styles */
 @layer base {
   body {
-    @apply text-forest bg-cream;
+    @apply bg-cream text-forest;
   }
 }
