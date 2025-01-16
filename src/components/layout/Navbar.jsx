@@ -32,13 +32,7 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/browse" className="text-shadow hover:text-shadow/80">
-              Browse Vegetables
-            </Link>
-            <Link to="/about" className="text-shadow hover:text-shadow/80">
-              About VeggieSub
-            </Link>
-            <Link to="/faq" className="text-shadow hover:text-shadow/80">
-              FAQ
+              Buy Vegetables
             </Link>
 
             {/* Cart Icon */}
@@ -92,20 +86,6 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse Vegetables
-              </Link>
-              <Link
-                to="/about"
-                className="px-4 py-2 hover:bg-tan/10"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About VeggieSub
-              </Link>
-              <Link
-                to="/faq"
-                className="px-4 py-2 hover:bg-tan/10"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                FAQ
               </Link>
               <Link
                 to="/cart"
